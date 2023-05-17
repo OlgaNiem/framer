@@ -1,26 +1,65 @@
 import React from 'react';
 import { motion, useScroll} from "framer-motion"
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { animateScroll as scroll } from 'react-scroll';
 
+const menuItemVariants = {
+  initial: {
+      opacity: 0
+  },
+  animate: {
+      opacity: 1
+  }
+};
 
 const Wireframe = () => {
+  const [showScrollButton, setShowScrollButton] = useState (false)
+  
+  const handleScrollToBottom = () => {
+    scroll.scrollToBottom(); // Прокрутка к низу страницы при клике на элемент
+  };
+  const handleScrollToTop = () => {
+    scroll.scrollToTop(); // Прокрутка к верху страницы при клике
+  };
+  useEffect(() => {
+    scroll.scrollToTop(); // Прокрутка к верху страницы при загрузке компонента
+
+    const handleScroll = () => {
+      const scrollPosition = window.innerHeight + window.pageYOffset;
+      const documentHeight = document.documentElement.scrollHeight;
+      const bottomOffset = 200; // Отступ снизу, чтобы кнопка не мешала контенту
+
+      if (scrollPosition >= documentHeight - bottomOffset) {
+        setShowScrollButton(true);
+      } else {
+        setShowScrollButton(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+
   useEffect(() => {
     scroll.scrollToTop(); // Прокрутка к верху страницы при загрузке компонента
   }, []);
 
-  const handleScroll = () => {
-    scroll.scrollToBottom(); // Прокрутка к низу страницы при клике на элемент
-  };
   return (
     <div className="flex flex-col min-h-screen">
-      <motion.div className="bg-gray-700 flex gap-5 p-10 items-center justify-end text-white py-4"
-        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
-        <motion.div className="bg-gray-500 h-8 w-24" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}></motion.div>
-        <motion.div className="bg-gray-500 h-8 w-24" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}></motion.div>
-        <motion.div className="bg-gray-500 h-8 w-24" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}></motion.div>
-        <motion.div className="bg-gray-500 h-8 w-24" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}></motion.div>
-        <motion.div className="bg-gray-500 h-8 w-24" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}></motion.div>
+      <motion.div initial="initial" animate="animate" 
+      transition={{
+        staggerChildren: 0.25,
+        delayChildren: 2 //kan åckså adderas
+      }}
+      className="bg-gray-700 flex gap-5 p-10 items-center justify-end text-white py-4">
+      <motion.div  variants= {menuItemVariants} className="bg-gray-500 h-8 w-24"></motion.div>
+      <motion.div  variants= {menuItemVariants} className="bg-gray-500 h-8 w-24"></motion.div>
+      <motion.div  variants= {menuItemVariants} className="bg-gray-500 h-8 w-24"></motion.div>
+      <motion.div  variants= {menuItemVariants} className="bg-gray-500 h-8 w-24"></motion.div>
+      <motion.div  variants= {menuItemVariants} className="bg-gray-500 h-8 w-24"></motion.div>
       </motion.div>
       <div className="flex flex-1">
         <div className="w-1/6 bg-gray-600 text-white">
@@ -34,8 +73,15 @@ const Wireframe = () => {
             <motion.div className="bg-gray-700 h-8 mb-4" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}></motion.div>
 
             <motion.div className="bg-red-500 h-8 mb-4 flex justify-center items-center" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-            <button onClick={handleScroll}>Scroll down</button>
+              <button onClick={handleScrollToBottom}>Scroll down</button>
             </motion.div>
+            
+            {showScrollButton && (
+              <motion.div className="bg-yellow-500 h-8 mb-4 flex justify-center items-center" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                <button onClick={handleScrollToTop}>Scroll Up</button>
+              </motion.div>
+            )}
+
           </div>
         </div>
         <div className="w-5/6 ">
@@ -56,16 +102,28 @@ const Wireframe = () => {
           <div className="flex flex-wrap gap-2 justify-center items-center">
           {Array.from(Array(40)).map((_, index) => (
               <React.Fragment key={index}>
-                <div className='flex flex-col mb-10 shadow'>
-                    <div className={`bg-gray-400 mb-4 mt-10 h-40 w-60 m-2 ${index % 6 === 5 ? 'mb-2' : ''}`}></div>
-                    <div className='flex w-full px-4 justify-between'>
-                        <div className='h-12 w-12 rounded-full bg-gray-400'></div>
-                        <div className='h-12 w-2/3 bg-gray-400'></div>
-                    </div>
-                    
-                </div>
-                {index % 6 === 5 && <div className="w-full border-b-8 border-gray-700"></div>}
-              </React.Fragment>
+              <motion.div className='flex flex-col mb-10 shadow'
+              initial={{
+                  opacity: 0,
+                  y: '2rem'
+              }} 
+              whileInView={{
+                  opacity: 1,
+                  y: 0,
+                  transition: {
+                      duration: 1
+                  }
+              }}
+              >
+                  <div className={`bg-gray-400 mb-4 mt-10 h-40 w-60 m-2 ${index % 6 === 5 ? 'mb-2' : ''}`}></div>
+                  <div className='flex w-full px-4 justify-between'>
+                      <div className='h-12 w-12 rounded-full bg-gray-400'></div>
+                      <div className='h-12 w-2/3 bg-gray-400'></div>
+                  </div>
+                  
+              </motion.div>
+              {index % 6 === 5 && <div className="w-full border-b-8 border-gray-700"></div>}
+            </React.Fragment>
             ))}
           </div>
         </div>
