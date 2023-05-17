@@ -14,6 +14,7 @@ const menuItemVariants = {
 
 const Wireframe = () => {
   const [showScrollButton, setShowScrollButton] = useState (false)
+  console.log(showScrollButton)
   
   const handleScrollToBottom = () => {
     scroll.scrollToBottom(); // Прокрутка к низу страницы при клике на элемент
@@ -22,16 +23,17 @@ const Wireframe = () => {
     scroll.scrollToTop(); // Прокрутка к верху страницы при клике
   };
   useEffect(() => {
-    scroll.scrollToTop(); // Прокрутка к верху страницы при загрузке компонента
 
     const handleScroll = () => {
       const scrollPosition = window.innerHeight + window.pageYOffset;
       const documentHeight = document.documentElement.scrollHeight;
       const bottomOffset = 200; // Отступ снизу, чтобы кнопка не мешала контенту
-
+        console.log(scrollPosition, documentHeight - bottomOffset)
       if (scrollPosition >= documentHeight - bottomOffset) {
+        
         setShowScrollButton(true);
       } else {
+        
         setShowScrollButton(false);
       }
     };
@@ -40,19 +42,19 @@ const Wireframe = () => {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, []);
+  }, [showScrollButton]);
 
 
   useEffect(() => {
     scroll.scrollToTop(); // Прокрутка к верху страницы при загрузке компонента
   }, []);
-
+  
   return (
     <div className="flex flex-col min-h-screen">
       <motion.div initial="initial" animate="animate" 
       transition={{
         staggerChildren: 0.25,
-        delayChildren: 2 //kan åckså adderas
+        delayChildren: 2 //kan också adderas
       }}
       className="bg-gray-700 flex gap-5 p-10 items-center justify-end text-white py-4">
       <motion.div  variants= {menuItemVariants} className="bg-gray-500 h-8 w-24"></motion.div>
@@ -62,7 +64,7 @@ const Wireframe = () => {
       <motion.div  variants= {menuItemVariants} className="bg-gray-500 h-8 w-24"></motion.div>
       </motion.div>
       <div className="flex flex-1">
-        <div className="w-1/6 bg-gray-600 text-white">
+        <div className="w-1/6 bg-gray-600 text-white relative">
           <div className="p-4">
             <motion.div className="bg-gray-700 h-8 mb-4" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}></motion.div>
             <motion.div className="bg-gray-700 h-8 mb-4" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}></motion.div>
@@ -72,12 +74,12 @@ const Wireframe = () => {
             <motion.div className="bg-gray-700 h-8 mb-4" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}></motion.div>
             <motion.div className="bg-gray-700 h-8 mb-4" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}></motion.div>
 
-            <motion.div className="bg-red-500 h-8 mb-4 flex justify-center items-center" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+            <motion.div className="bg-red-700 h-8 mb-4 flex justify-center items-center" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
               <button onClick={handleScrollToBottom}>Scroll down</button>
             </motion.div>
             
             {showScrollButton && (
-              <motion.div className="bg-yellow-500 h-8 mb-4 flex justify-center items-center" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+              <motion.div className="bg-yellow-500 h-8 mb-4 flex justify-center items-center absolute bottom-0 left-4 right-4 " whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
                 <button onClick={handleScrollToTop}>Scroll Up</button>
               </motion.div>
             )}
