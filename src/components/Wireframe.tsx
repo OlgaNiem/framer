@@ -65,7 +65,7 @@ const Wireframe = () => {
       </motion.div>
       <div className="flex flex-1">
         <div className="w-1/6 bg-gray-600 text-white relative">
-          <div className="p-4">
+          <motion.div className="p-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
             <motion.div className="bg-gray-700 h-8 mb-4" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}></motion.div>
             <motion.div className="bg-gray-700 h-8 mb-4" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}></motion.div>
             <motion.div className="bg-gray-700 h-8 mb-4" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}></motion.div>
@@ -84,7 +84,7 @@ const Wireframe = () => {
               </motion.div>
             )}
 
-          </div>
+          </motion.div>
         </div>
         <div className="w-5/6 ">
           <div className="bg-gray-300 px-5 flex w-full m-auto justify-between center items-center">
